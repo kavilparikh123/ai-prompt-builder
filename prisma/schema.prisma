@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Prompt {
+  id        String     @id @default(cuid())
+  title     String
+  body      String
+  createdAt DateTime   @default(now())
+  messages  Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  promptId  String
+  prompt    Prompt   @relation(fields: [promptId], references: [id])
+  sender    String   // "user" or "ai"
+  text      String
+  createdAt DateTime @default(now())
+}
